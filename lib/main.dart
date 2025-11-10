@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'login_screen.dart';
+import 'register_screen.dart';
 import 'catalog_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
 import 'historial_screen.dart';
 import 'ubicacion_screen.dart';
-import 'register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +50,6 @@ class _MainAppState extends State<MainApp> {
   int _selectedIndex = 0;
   List<Map<String, dynamic>> carrito = [];
 
-  // 🔹 Funciones para manejar el carrito
   void _agregarAlCarrito(Map<String, dynamic> producto) {
     setState(() {
       final existente =
@@ -85,7 +84,7 @@ class _MainAppState extends State<MainApp> {
         carritoActual: carrito,
       ),
       const UbicacionScreen(),
-      const ProfileScreen(),
+      ProfileScreen(userId: widget.userId),
     ];
 
     return Scaffold(
@@ -93,7 +92,6 @@ class _MainAppState extends State<MainApp> {
         title: Text('Bienvenido ${widget.nombreUsuario}'),
         backgroundColor: Colors.orange,
         actions: [
-          // 🔹 Ícono del carrito con contador
           Stack(
             children: [
               IconButton(
@@ -106,7 +104,7 @@ class _MainAppState extends State<MainApp> {
                         carrito: carrito,
                         onClearCart: _limpiarCarrito,
                         onDeleteItem: _eliminarDelCarrito,
-                        userId: widget.userId, // ✅ Usa el ID real del usuario
+                        userId: widget.userId,
                       ),
                     ),
                   );
@@ -120,12 +118,10 @@ class _MainAppState extends State<MainApp> {
                     radius: 8,
                     backgroundColor: Colors.red,
                     child: Text(
-                      carrito
-                          .fold<int>(
-                              0,
-                              (suma, item) =>
-                                  suma + (item['cantidad'] as int))
-                          .toString(),
+                      carrito.fold<int>(
+                        0,
+                        (suma, item) => suma + (item['cantidad'] as int),
+                      ).toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
@@ -145,7 +141,8 @@ class _MainAppState extends State<MainApp> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.cake), label: 'Catálogo'),
-          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Ubicación'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.location_on), label: 'Ubicación'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
